@@ -769,7 +769,7 @@ static cmsHPROFILE _colorspaces_create_linear_infrared_profile(void)
 
   // linear rgb with r and b swapped:
   cmsCIExyYTRIPLE BGR_Primaries =
-    { sRGB_Primaries.Blue, sRGB_Primaries.Green, sRGB_Primaries.Red };
+    { sRGB_Primaries.Blue, sRGB_Primaries.Red, sRGB_Primaries.Green };
 
   cmsHPROFILE profile = _create_lcms_profile("Linear Infrared BGR",
                                              "darktable Linear Infrared BGR",
