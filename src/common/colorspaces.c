@@ -781,6 +781,23 @@ static cmsHPROFILE _colorspaces_create_linear_infrared_profile(void)
   return profile;
 }
 
+static cmsHPROFILE _colorspaces_create_linear_infrared_profile_IRG(void)
+{
+  cmsToneCurve *transferFunction = cmsBuildGamma(NULL, 1.0);
+
+  cmsCIExyYTRIPLE IRG_Primaries =
+    { sRGB_Primaries.Blue, sRGB_Primaries.Red, sRGB_Primaries.Green };
+
+  cmsHPROFILE profile = _create_lcms_profile("Linear Infrared IRG",
+                                             "darktable Linear Infrared IRG",
+                                             &D65xyY, &IRG_Primaries,
+                                             transferFunction, NULL, FALSE);
+
+  cmsFreeToneCurve(transferFunction);
+
+  return profile;
+}
+
 const dt_colorspaces_color_profile_t *dt_colorspaces_get_work_profile
   (const dt_imgid_t imgid)
 {
@@ -1543,6 +1560,12 @@ dt_colorspaces_t *dt_colorspaces_init()
 
   res->profiles = g_list_append
     (res->profiles,
+     _create_profile(DT_COLORSPACE_INFRARED_IRG,
+                     _colorspaces_create_linear_infrared_profile_IRG(),
+                     _("linear infrared IRG"), ++in_pos, -1, -1, -1, -1, -1));
+
+  res->profiles = g_list_append
+    (res->profiles,
      _create_profile(DT_COLORSPACE_BRG, _colorspaces_create_brg_profile(),
                      _("BRG (for testing)"), ++in_pos, ++out_pos, ++display_pos,
                      -1, -1, ++display2_pos));
@@ -1744,6 +1767,8 @@ const char *dt_colorspaces_get_name(dt_colorspaces_color_profile_type_t type,
        return _("Lab");
      case DT_COLORSPACE_INFRARED:
        return _("linear infrared BGR");
+     case DT_COLORSPACE_INFRARED_IRG:
+       return _("linear infrared IRG");
      case DT_COLORSPACE_DISPLAY:
        return _("system display profile");
      case DT_COLORSPACE_EMBEDDED_ICC:

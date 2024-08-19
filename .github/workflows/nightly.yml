@@ -1,13 +1,11 @@
 name: Nightly PKG
 
 on:
-  schedule:
-    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
   contents: read
-  actions: write  # We need this to be able to cancel workflow if job fails
+  actions: write # We need this to be able to cancel workflow if job fails
 
 jobs:
   AppImage:
@@ -18,7 +16,12 @@ jobs:
       fail-fast: false
       matrix:
         compiler:
-          - { compiler: GNU12, CC: gcc-12, CXX: g++-12, packages: gcc-12 g++-12 }
+          - {
+              compiler: GNU12,
+              CC: gcc-12,
+              CXX: g++-12,
+              packages: gcc-12 g++-12,
+            }
         branch:
           - { code: master, label: gitmaster }
     env:
@@ -285,9 +288,12 @@ jobs:
           - { os: macos-13, xcode: 15.2, deployment: 13.5 } # LLVM16, x86_64
           - { os: macos-14, xcode: 15.4, deployment: 14.0 } # LLVM16, arm64
         compiler:
-          - { compiler: XCode,   CC: cc, CXX: c++ }
-        btype: [ Release ]
-        eco: [-DBINARY_PACKAGE_BUILD=ON -DBUILD_CURVE_TOOLS=ON -DBUILD_NOISE_TOOLS=ON -DUSE_GRAPHICSMAGICK=OFF -DUSE_IMAGEMAGICK=ON]
+          - { compiler: XCode, CC: cc, CXX: c++ }
+        btype: [Release]
+        eco:
+          [
+            -DBINARY_PACKAGE_BUILD=ON -DBUILD_CURVE_TOOLS=ON -DBUILD_NOISE_TOOLS=ON -DUSE_GRAPHICSMAGICK=OFF -DUSE_IMAGEMAGICK=ON,
+          ]
         target:
           - skiptest
         generator:
@@ -372,7 +378,7 @@ jobs:
         with:
           tag_name: nightly
           prerelease: true
-          name: 'Darktable nightly build $$'
+          name: "Darktable nightly build $$"
           # Please do not modify the body text by adding line breaks in paragraphs, as this text should display well on screens of different widths
           body: |
             This is a nightly build of Darktable.
